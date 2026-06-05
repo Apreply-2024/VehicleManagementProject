@@ -19,7 +19,7 @@ def create_vehicle(vehicle: Vehicle):
 @router.get("/vehicles/{vehicle_id}")
 def get_vehicle(vehicle_id: int):
 
-    if vehicle_id >= len(vehicles):
+    if vehicle_id < 0 or vehicle_id >= len(vehicles):
         raise HTTPException(
             status_code=404,
             detail="Vehicle not found"
@@ -27,7 +27,39 @@ def get_vehicle(vehicle_id: int):
 
     return vehicles[vehicle_id]
 
-@router.get("/vehicles/{vehicle_id}")
-def get_vehicle(vehicle_id: int):
+@router.put("/vehicles/{vehicle_id}")
+def update_vehicle(vehicle_id: int, vehicle: Vehicle):
 
-    return vehicles[vehicle_id]
+    if vehicle_id < 0 or vehicle_id >= len(vehicles):
+        raise HTTPException(
+            status_code=404,
+            detail="Vehicle not found"
+        )
+
+    vehicles[vehicle_id] = vehicle
+
+    return {
+        "message": "Vehicle updated successfully",
+        "vehicle": vehicle
+    }
+
+@router.delete("/vehicles/{vehicle_id}")
+def delete_vehicle(vehicle_id: int):
+
+    if vehicle_id < 0 or vehicle_id >= len(vehicles):
+        raise HTTPException(
+            status_code=404,
+            detail="Vehicle not found"
+        )
+
+    deleted_vehicle = vehicles.pop(vehicle_id)
+
+    return {
+        "message": "Vehicle deleted successfully",
+        "vehicle": deleted_vehicle
+    }
+
+@router.get("/vehicles")
+def get_vehicles():
+
+    return vehicles
