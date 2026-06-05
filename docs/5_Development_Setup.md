@@ -106,3 +106,31 @@ http://127.0.0.1:8000/openapi.json
 Purpose:
 
 Machine-readable API contract used by frontend applications and tools.
+
+# Git Workflow
+
+## Check Status
+
+git status
+
+## Stage Changes
+
+git add .
+
+## Commit Changes
+
+git commit -m "Meaningful message"
+
+Examples:
+
+git commit -m "Initial project setup"
+
+git commit -m "Completed Day 2 setup and FastAPI application"
+
+## View Commit History
+
+git log
+
+Purpose:
+
+Version control enables tracking changes and restoring previous versions of the project.
