@@ -42,3 +42,67 @@ venv\Scripts\activate
 Purpose:
 
 Provides isolated dependency management for the project.
+
+# Version Control
+
+Tool:
+
+Git
+
+Commands:
+
+git init
+
+git add .
+
+git commit -m "Initial project setup"
+
+Purpose:
+
+Track source code changes and support collaboration.
+
+# Running the FastAPI Application
+
+## Activate Virtual Environment
+
+Windows PowerShell
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+
+& "venv\Scripts\Activate.ps1"
+
+## Start Server
+
+python -m uvicorn main:app --reload
+
+## Verify Application
+
+URL:
+
+http://127.0.0.1:8000
+
+Expected Response:
+
+{
+"message": "Vehicle Management System"
+}
+
+## Swagger UI
+
+URL:
+
+http://127.0.0.1:8000/docs
+
+Purpose:
+
+Provides automatically generated API documentation and allows testing APIs directly from the browser.
+
+## OpenAPI Specification
+
+URL:
+
+http://127.0.0.1:8000/openapi.json
+
+Purpose:
+
+Machine-readable API contract used by frontend applications and tools.
