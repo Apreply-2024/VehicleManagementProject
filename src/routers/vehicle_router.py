@@ -1,65 +1,52 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, status
+
 from schemas.vehicle_schema import Vehicle
 
-router = APIRouter()
+from services.vehicle_service import (
+    create_vehicle_service,
+    get_all_vehicles_service,
+    get_vehicle_service,
+    update_vehicle_service,
+    delete_vehicle_service
+)
 
-vehicles = []
+router = APIRouter(
+    prefix="/api/v1",
+    tags=["Vehicles"]
+)
 
 
-@router.post("/vehicles")
+@router.post(
+    "/vehicles",
+    status_code=status.HTTP_201_CREATED
+)
 def create_vehicle(vehicle: Vehicle):
-
-    vehicles.append(vehicle)
 
     return {
         "message": "Vehicle added successfully",
-        "vehicle": vehicle
+        "vehicle": create_vehicle_service(vehicle)
     }
 
-@router.get("/vehicles/{vehicle_id}")
-def get_vehicle(vehicle_id: int):
-
-    if vehicle_id < 0 or vehicle_id >= len(vehicles):
-        raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
-        )
-
-    return vehicles[vehicle_id]
-
-@router.put("/vehicles/{vehicle_id}")
-def update_vehicle(vehicle_id: int, vehicle: Vehicle):
-
-    if vehicle_id < 0 or vehicle_id >= len(vehicles):
-        raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
-        )
-
-    vehicles[vehicle_id] = vehicle
-
-    return {
-        "message": "Vehicle updated successfully",
-        "vehicle": vehicle
-    }
-
-@router.delete("/vehicles/{vehicle_id}")
-def delete_vehicle(vehicle_id: int):
-
-    if vehicle_id < 0 or vehicle_id >= len(vehicles):
-        raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
-        )
-
-    deleted_vehicle = vehicles.pop(vehicle_id)
-
-    return {
-        "message": "Vehicle deleted successfully",
-        "vehicle": deleted_vehicle
-    }
 
 @router.get("/vehicles")
 def get_vehicles():
 
-    return vehicles
+    return get_all_vehicles_service()
+
+
+@router.get("/vehicles/{vehicle_id}")
+def get_vehicle(vehicle_id: int):
+
+    return get_vehicle_service(vehicle_id)
+
+
+@router.put("/vehicles/{vehicle_id}")
+def update_vehicle(vehicle_id: int, vehicle: Vehicle):
+
+    return update_vehicle_service(vehicle_id, vehicle)
+
+
+@router.delete("/vehicles/{vehicle_id}")
+def delete_vehicle(vehicle_id: int):
+
+    return delete_vehicle_service(vehicle_id)
