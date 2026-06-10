@@ -1,6 +1,7 @@
-from fastapi import HTTPException
+from schemas.response_schema import APIResponse
+from schemas.vehicle_schema import VehicleCreate, VehicleResponse
 
-from schemas.vehicle_schema import Vehicle
+from exceptions.custom_exceptions import AppException
 
 from repositories.vehicle_repository import (
     create_vehicle,
@@ -11,56 +12,65 @@ from repositories.vehicle_repository import (
 )
 
 
-def create_vehicle_service(vehicle: Vehicle):
+def create_vehicle_service(vehicle: VehicleCreate):
 
-    return create_vehicle(vehicle)
+    db_vehicle = create_vehicle(vehicle)
+
+    return APIResponse(
+        success=True,
+        message="Vehicle created successfully",
+        data=db_vehicle
+    )
 
 
 def get_all_vehicles_service():
 
-    return get_all_vehicles()
+    vehicles = get_all_vehicles()
+
+    return APIResponse(
+        success=True,
+        message="Vehicles fetched successfully",
+        data=vehicles
+    )
 
 
 def get_vehicle_service(vehicle_id: int):
 
     vehicle = get_vehicle_by_id(vehicle_id)
 
-    if vehicle is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
-        )
+    if not vehicle:
+        raise AppException("Vehicle not found", 404)
 
-    return vehicle
+    return APIResponse(
+        success=True,
+        message="Vehicle fetched successfully",
+        data=vehicle
+    )
 
 
-def update_vehicle_service(vehicle_id: int, vehicle: Vehicle):
+def update_vehicle_service(vehicle_id: int, vehicle: VehicleCreate):
 
     updated_vehicle = update_vehicle(vehicle_id, vehicle)
 
-    if updated_vehicle is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
-        )
+    if not updated_vehicle:
+        raise AppException("Vehicle not found", 404)
 
-    return {
-        "message": "Vehicle updated successfully",
-        "vehicle": updated_vehicle
-    }
+    return APIResponse(
+        success=True,
+        message="Vehicle updated successfully",
+        data=updated_vehicle
+    )
 
 
 def delete_vehicle_service(vehicle_id: int):
 
     deleted_vehicle = delete_vehicle(vehicle_id)
 
-    if deleted_vehicle is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Vehicle not found"
-        )
+    if not deleted_vehicle:
+        raise AppException("Vehicle not found", 404)
 
-    return {
-        "message": "Vehicle deleted successfully",
-        "vehicle": deleted_vehicle
-    }
+    return APIResponse(
+        success=True,
+        message="Vehicle deleted successfully",
+        data=deleted_vehicle
+    )
