@@ -7,6 +7,11 @@ from routers.vehicle_router import router
 from exceptions.custom_exceptions import AppException
 from exceptions.exception_handler import app_exception_handler
 
+from models.user_model import UserModel
+
+UserModel.metadata.create_all(bind=engine)
+
+from routers.user_router import router as user_router
 
 VehicleModel.metadata.create_all(bind=engine)
 
@@ -18,6 +23,7 @@ app = FastAPI(
 app.add_exception_handler(AppException, app_exception_handler)
 
 app.include_router(router)
+app.include_router(user_router)
 
 
 @app.get("/")
